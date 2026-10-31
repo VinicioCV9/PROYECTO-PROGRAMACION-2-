@@ -1,0 +1,129 @@
+/* ==========================================================================
+   styles.css — SOLO ajustes finos de convivencia Tailwind + Bootstrap 5
+   (todo lo demás se resuelve con utilidades de Tailwind en el HTML)
+   ========================================================================== */
+
+/* ---------- 1. Tokens: alinear Bootstrap con la paleta de marca ---------- */
+:root {
+  --brand: #ff5a1f;
+  --brand-600: #f03f0a;
+  --brand-rgb: 255, 90, 31;
+  --ink: #171310;
+
+  --bs-primary: var(--brand);
+  --bs-primary-rgb: var(--brand-rgb);
+  --bs-body-font-family: 'Inter', system-ui, sans-serif;
+  --bs-body-bg: #fbf8f5;
+  --bs-body-color: #26211d;
+  --bs-border-color: #ece7e2;
+  --bs-border-radius: .75rem;
+  --bs-border-radius-lg: 1rem;
+  --bs-link-color: var(--brand-600);
+  --bs-link-color-rgb: 240, 63, 10;
+  --bs-link-hover-color: #c72e08;
+  --bs-focus-ring-color: rgba(var(--brand-rgb), .25);
+}
+
+/* Reset mínimo de bordes (lo que haría el preflight de Tailwind, sin romper Bootstrap) */
+*, ::before, ::after { border-width: 0; border-style: solid; border-color: #ece7e2; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+img { max-width: 100%; }
+a { text-decoration: none; }
+::selection { background: rgba(var(--brand-rgb), .18); color: #9e270e; }
+
+/* ---------- 2. Componentes Bootstrap con look de marca ---------- */
+.btn { --bs-btn-font-weight: 600; border-radius: .875rem; }
+.btn-brand {
+  --bs-btn-color: #fff; --bs-btn-bg: var(--brand); --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-color: #fff; --bs-btn-hover-bg: var(--brand-600); --bs-btn-hover-border-color: var(--brand-600);
+  --bs-btn-active-bg: #c72e08; --bs-btn-active-border-color: #c72e08; --bs-btn-active-color: #fff;
+  --bs-btn-disabled-bg: var(--brand); --bs-btn-disabled-border-color: var(--brand); --bs-btn-disabled-color: #fff;
+  --bs-btn-focus-shadow-rgb: var(--brand-rgb);
+  box-shadow: 0 10px 24px -10px rgba(var(--brand-rgb), .6);
+}
+
+.form-control, .form-select {
+  border: 1px solid #e4ded8; border-radius: .875rem; padding: .7rem 1rem; background-color: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+.form-control:focus, .form-select:focus, .form-check-input:focus {
+  border-color: var(--brand); box-shadow: 0 0 0 .25rem rgba(var(--brand-rgb), .15);
+}
+.form-check-input { border: 1px solid #d6cfc8; }
+.form-check-input:checked { background-color: var(--brand); border-color: var(--brand); }
+.form-floating > label { color: #8f877f; }
+.invalid-feedback { font-size: .78rem; }
+
+.modal-content { border: 0; border-radius: 1.5rem; box-shadow: 0 30px 80px -20px rgba(23,19,16,.35); overflow: hidden; }
+.modal-backdrop.show { opacity: .55; backdrop-filter: blur(4px); }
+.offcanvas { border: 0 !important; box-shadow: -20px 0 60px -20px rgba(23,19,16,.3); }
+
+.toast-container { z-index: 1090; }
+.toast { border: 0; border-radius: 1rem; box-shadow: 0 18px 40px -12px rgba(23,19,16,.35); overflow: hidden; }
+
+.nav-pills .nav-link { color: #6b635b; font-weight: 600; border-radius: .875rem; }
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link { background: var(--ink); color: #fff; }
+
+.dropdown-menu { border: 1px solid #ece7e2; border-radius: 1rem; padding: .5rem; box-shadow: 0 20px 40px -16px rgba(23,19,16,.25); }
+.dropdown-item { border-radius: .6rem; padding: .5rem .75rem; font-size: .9rem; }
+.dropdown-item:active { background: var(--brand); }
+
+.table { --bs-table-bg: transparent; --bs-table-hover-bg: #fbf6f2; margin-bottom: 0; }
+.table > :not(caption) > * > * { padding: .9rem 1rem; border-bottom: 1px solid #f1ece7; vertical-align: middle; }
+.table thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #8f877f; font-weight: 600; background: #fbf8f5; }
+
+.badge { font-weight: 600; letter-spacing: .01em; }
+
+/* Badges de estado del pedido */
+.estado-pendiente      { background: #fff4d6 !important; color: #8a5a00 !important; }
+.estado-en_preparacion { background: #e3efff !important; color: #1d4fa8 !important; }
+.estado-en_camino      { background: #f1e6ff !important; color: #6a2bb8 !important; }
+.estado-entregado      { background: #dcf7e6 !important; color: #126b3a !important; }
+.estado-cancelado      { background: #fde4e4 !important; color: #a31d1d !important; }
+
+/* ---------- 3. Utilidades visuales complementarias ---------- */
+.glass { background: rgba(251, 248, 245, .78); backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px); }
+.glass-dark { background: rgba(255, 255, 255, .1); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.text-gradient { background: linear-gradient(135deg, #ffad86, #ff5a1f 60%, #f03f0a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
+
+.skeleton { position: relative; overflow: hidden; background: #efe9e3; }
+.skeleton::after {
+  content: ''; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+  animation: shimmer 1.3s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* Tarjeta de producto: zoom suave de imagen */
+.product-card img { transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.product-card:hover img { transform: scale(1.06); }
+
+/* Chips de categoría */
+.chip[aria-pressed='true'] { background: var(--ink) !important; color: #fff !important; border-color: var(--ink) !important; }
+
+/* Tarjetas de método de pago (radio) */
+.pay-option input:checked + label { border-color: var(--brand) !important; background: #fff6f1 !important; box-shadow: 0 0 0 3px rgba(var(--brand-rgb), .12); }
+
+/* Línea de tiempo del pedido */
+.timeline-step.done .timeline-dot   { background: var(--brand); color: #fff; border-color: var(--brand); }
+.timeline-step.current .timeline-dot { box-shadow: 0 0 0 6px rgba(var(--brand-rgb), .18); animation: pulse 1.8s infinite; }
+.timeline-step.done .timeline-bar   { background: var(--brand); }
+@keyframes pulse { 50% { box-shadow: 0 0 0 10px rgba(var(--brand-rgb), .06); } }
+
+/* Inputs numéricos sin flechas */
+input[type='number']::-webkit-outer-spin-button, input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
+
+/* Admin oculto hasta validar rol (evita "flash" del panel a un cliente) */
+html.auth-pending body { visibility: hidden; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d9d2cb; border-radius: 999px; border: 3px solid #fbf8f5; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
