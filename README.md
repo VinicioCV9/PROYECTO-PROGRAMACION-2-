@@ -38,30 +38,31 @@ NODE_ENV=development
 CORS_ORIGIN=*
 
 # ---------- MongoDB Atlas ----------
-MONGO_URI=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/foodexpress?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/foodexpress?retryWrites=true&w=majority
+# También se admite MONGO_URI o variables separadas MONGODB_USERNAME y MONGODB_PASSWORD
 
 # ---------- JWT ----------
 JWT_SECRET=pon_aqui_una_cadena_larga_y_aleatoria
 JWT_EXPIRES_IN=7d
 
-# ---------- Reglas de negocio ----------
-COSTO_ENVIO=2.5
-TASA_IMPUESTO=0.13
+# ---------- Reglas de negocio (Moneda: Quetzales GTQ - Q) ----------
+COSTO_ENVIO=15
+TASA_IMPUESTO=0.12
 
 # ---------- Seeder ----------
 AUTO_SEED=true
 ```
 
-### Obtener la `MONGO_URI` en Atlas
+### Obtener la `MONGODB_URI` / `MONGO_URI` en Atlas
 
 1. En Atlas, crea un clúster gratuito (M0).
 2. En **Database Access**, crea un usuario de base de datos con contraseña.
 3. En **Network Access**, agrega tu IP. Para desarrollo puedes usar `0.0.0.0/0`.
 4. Entra a **Database → Connect → Drivers**, copia la cadena de conexión y reemplaza `<usuario>`, `<password>` y `<cluster>`.
-   - Agrega el nombre de la base (`/foodexpress`) antes del `?`.
+   - Si no especificas el nombre de la base de datos en la URI, el sistema selecciona automáticamente `foodexpress`.
    - Si la contraseña tiene caracteres especiales (`@`, `#`, `/`…), codifícalos en formato URL.
 
-> Si tienes MongoDB instalado localmente, usa `MONGO_URI=mongodb://127.0.0.1:27017/foodexpress`.
+> Si tienes MongoDB instalado localmente, usa `MONGODB_URI=mongodb://127.0.0.1:27017/foodexpress`.
 
 ### Generar el `JWT_SECRET`
 
@@ -69,7 +70,7 @@ AUTO_SEED=true
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-Si `JWT_SECRET` o `MONGO_URI` no están configurados, el servidor muestra el error y se detiene.
+Si `JWT_SECRET` no está definido en `.env`, en entorno de desarrollo el servidor utiliza una clave local por defecto.
 
 ## 4. Ejecución
 
@@ -82,9 +83,9 @@ Si `JWT_SECRET` o `MONGO_URI` no están configurados, el servidor muestra el err
 | `npm run seed` | Carga los productos y usuarios demo que falten. |
 | `npm run seed:reset` | **Borra** productos y pedidos, y vuelve a cargar los datos demo. |
 
-Con `npm run dev`, abre **http://localhost:4000**.
+Con `npm run dev` o `npm start`, abre **http://localhost:4000** (también responde en el puerto configurado en `PORT`, ej. **http://localhost:4001**).
 
-Al arrancar con `AUTO_SEED=true`, si la base está vacía se cargan 12 platillos y dos usuarios de prueba.
+Al arrancar con `AUTO_SEED=true`, si la base está vacía se cargan **12 platillos con fotografías reales y precios en Quetzales (`Q 20.00` – `Q 85.00`)** junto con dos usuarios de prueba.
 
 > **Live Server:** si abres las páginas con Live Server (por ejemplo, en el puerto 5500), `public/js/config.js` detecta otro puerto y apunta la API a `http://localhost:4000/api`. Aun así, el backend debe estar encendido.
 

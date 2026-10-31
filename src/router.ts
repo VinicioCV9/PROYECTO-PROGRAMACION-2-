@@ -6,6 +6,7 @@ import {
   createOrder, getMyOrders, getOrderById, cancelMyOrder,
   getAllOrders, updateOrderStatus, getStats,
 } from './handlers';
+import { COSTO_ENVIO, TASA_IMPUESTO } from './handlers/orders';
 import { verifyToken, isAdmin } from './middlewares/auth';
 import { validarPedido, validarObjectId, validarEstado } from './middlewares/validarPedido';
 
@@ -16,7 +17,7 @@ router.get('/health', (_req, res) => res.json({ ok: true, status: 'up', time: ne
 router.get('/config', (_req, res) =>
   res.json({
     ok: true,
-    data: { costoEnvio: Number(process.env.COSTO_ENVIO ?? 2.5), tasaImpuesto: Number(process.env.TASA_IMPUESTO ?? 0.13) },
+    data: { costoEnvio: COSTO_ENVIO, tasaImpuesto: TASA_IMPUESTO },
   }),
 );
 

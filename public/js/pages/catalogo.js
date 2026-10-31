@@ -25,21 +25,27 @@ const els = {
 const state = {
   productos: [],
   categoria: new URLSearchParams(location.search).get('categoria') || 'Todos',
-  q: '',
+  q: new URLSearchParams(location.search).get('q') || '',
   sort: 'destacados',
 };
+
+if (state.q && els.search) {
+  els.search.value = state.q;
+  const navSearch = document.getElementById('nav-search-input');
+  if (navSearch) navSearch.value = state.q;
+}
 
 /* ---------------- Render ---------------- */
 
 function renderSkeleton() {
-  els.grid.innerHTML = Array.from({ length: 8 }, () => `
-    <div class="overflow-hidden rounded-3xl bg-white ring-1 ring-black/5">
+  els.grid.innerHTML = Array.from({ length: 6 }, () => `
+    <div class="overflow-hidden rounded-2xl bg-white ring-1 ring-black/5">
       <div class="skeleton aspect-[4/3]"></div>
       <div class="space-y-3 p-5">
         <div class="skeleton h-4 w-2/3 rounded-full"></div>
         <div class="skeleton h-3 w-full rounded-full"></div>
         <div class="skeleton h-3 w-1/2 rounded-full"></div>
-        <div class="flex items-center justify-between pt-2"><div class="skeleton h-6 w-16 rounded-full"></div><div class="skeleton h-10 w-24 rounded-xl"></div></div>
+        <div class="flex items-center justify-between pt-2"><div class="skeleton h-6 w-16 rounded-full"></div><div class="skeleton h-10 w-24 rounded-full"></div></div>
       </div>
     </div>`).join('');
 }
@@ -48,37 +54,35 @@ function renderFilters() {
   const counts = state.productos.reduce((acc, p) => ((acc[p.categoria] = (acc[p.categoria] ?? 0) + 1), acc), {});
   const cats = ['Todos', ...Object.keys(CATEGORIA_ICONOS).filter((c) => counts[c])];
   els.filters.innerHTML = cats.map((c) => `
-    <button type="button" class="chip flex shrink-0 items-center gap-2 rounded-2xl border border-ink-100 bg-white px-4 py-2.5 text-sm font-semibold text-ink-700 transition hover:border-ink-200 hover:bg-cream"
+    <button type="button" class="chip flex shrink-0 items-center gap-2 rounded-full bg-cream px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-200/70"
       data-categoria="${escapeHTML(c)}" aria-pressed="${c === state.categoria}">
-      <span class="text-base">${c === 'Todos' ? '✨' : categoriaIcon(c)}</span>${escapeHTML(c)}
-      <span class="rounded-lg bg-black/5 px-1.5 text-xs">${c === 'Todos' ? state.productos.length : counts[c]}</span>
+      <span class="text-sm leading-none">${c === 'Todos' ? '☀️' : categoriaIcon(c)}</span>${escapeHTML(c)}
     </button>`).join('');
 }
 
 function actionButton(p) {
   const qty = Cart.getQty(p._id);
   if (qty === 0) {
-    return `<button type="button" class="btn btn-brand flex items-center gap-1.5 px-3.5 py-2 text-sm" data-action="add" data-id="${p._id}" aria-label="Agregar ${escapeHTML(p.nombre)} al carrito">
+    return `<button type="button" class="btn btn-brand flex items-center gap-1.5 rounded-full px-4 py-2 text-sm" data-action="add" data-id="${p._id}" aria-label="Agregar ${escapeHTML(p.nombre)} al carrito">
       <i class="bi bi-plus-lg"></i>Agregar</button>`;
   }
-  return `<div class="flex items-center gap-1 rounded-xl bg-ink-900 p-1 text-white" role="group" aria-label="Cantidad de ${escapeHTML(p.nombre)}">
-      <button type="button" class="grid h-8 w-8 place-items-center rounded-lg bg-transparent text-white hover:bg-white/10" data-action="dec" data-id="${p._id}" aria-label="Quitar uno"><i class="bi bi-dash"></i></button>
+  return `<div class="flex items-center gap-1 rounded-full bg-brand-500 p-1 text-white shadow-glow" role="group" aria-label="Cantidad de ${escapeHTML(p.nombre)}">
+      <button type="button" class="grid h-8 w-8 place-items-center rounded-full bg-transparent text-white hover:bg-white/15" data-action="dec" data-id="${p._id}" aria-label="Quitar uno"><i class="bi bi-dash"></i></button>
       <span class="w-6 text-center text-sm font-bold" data-qty>${qty}</span>
-      <button type="button" class="grid h-8 w-8 place-items-center rounded-lg bg-transparent text-white hover:bg-white/10" data-action="inc" data-id="${p._id}" aria-label="Agregar uno"><i class="bi bi-plus"></i></button>
+      <button type="button" class="grid h-8 w-8 place-items-center rounded-full bg-transparent text-white hover:bg-white/15" data-action="inc" data-id="${p._id}" aria-label="Agregar uno"><i class="bi bi-plus"></i></button>
     </div>`;
 }
 
 function card(p, index) {
   return `
-    <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-lift animate-fade-up" style="animation-delay:${Math.min(index, 12) * 40}ms" data-card="${p._id}">
+    <article class="product-card group flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-lift animate-fade-up" style="animation-delay:${Math.min(index, 12) * 40}ms" data-card="${p._id}">
       <button type="button" class="relative block aspect-[4/3] overflow-hidden bg-cream p-0 text-start" data-action="detail" data-id="${p._id}" aria-label="Ver detalle de ${escapeHTML(p.nombre)}">
         <img src="${escapeHTML(resolveImg(p.imagen))}" ${imgFallbackAttr} alt="${escapeHTML(p.nombre)}" loading="lazy" class="h-full w-full object-cover">
-        <span class="badge glass absolute left-3 top-3 rounded-pill px-2.5 py-1.5 text-ink-800">${categoriaIcon(p.categoria)} ${escapeHTML(p.categoria)}</span>
-        ${p.destacado ? '<span class="badge absolute right-3 top-3 rounded-pill bg-brand-gradient px-2.5 py-1.5 shadow-glow"><i class="bi bi-fire me-1"></i>Popular</span>' : ''}
+        <span class="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/95 text-sm shadow-sm">${categoriaIcon(p.categoria)}</span>
       </button>
       <div class="flex flex-1 flex-col p-5">
         <h3 class="font-display text-lg font-bold leading-snug text-ink-900 mb-1">${escapeHTML(p.nombre)}</h3>
-        <p class="line-clamp-2 text-sm text-ink-400 mb-4">${escapeHTML(p.descripcion)}</p>
+        <p class="line-clamp-2 text-sm text-ink-500 mb-4">${escapeHTML(p.descripcion)}</p>
         <div class="mt-auto flex items-center justify-between gap-3">
           <span class="font-display text-xl font-extrabold text-ink-900">${formatMoney(p.precio)}</span>
           <div data-actions="${p._id}">${actionButton(p)}</div>
@@ -236,6 +240,8 @@ els.clear.addEventListener('click', () => {
   state.categoria = 'Todos';
   state.q = '';
   els.search.value = '';
+  const navSearch = document.getElementById('nav-search-input');
+  if (navSearch) navSearch.value = '';
   history.replaceState(null, '', location.pathname);
   renderFilters();
   renderGrid();

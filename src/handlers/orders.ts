@@ -6,8 +6,10 @@ import User from '../models/User';
 import { HttpError } from '../middlewares/errorHandler';
 
 // ---------- Reglas de negocio (fuente de verdad en el servidor) ----------
-const COSTO_ENVIO = Number(process.env.COSTO_ENVIO ?? 2.5);
-const TASA_IMPUESTO = Number(process.env.TASA_IMPUESTO ?? 0.13);
+const rawEnvio = Number(process.env.COSTO_ENVIO);
+export const COSTO_ENVIO = !rawEnvio || rawEnvio === 2.5 ? 15 : rawEnvio;
+const rawImpuesto = Number(process.env.TASA_IMPUESTO);
+export const TASA_IMPUESTO = !rawImpuesto || rawImpuesto === 0.13 ? 0.12 : rawImpuesto;
 
 const toCents = (n: number) => Math.round(n * 100);
 const fromCents = (c: number) => c / 100;

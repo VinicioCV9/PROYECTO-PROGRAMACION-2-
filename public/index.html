@@ -17,49 +17,51 @@
   <script src="js/tailwind.config.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-cream font-sans text-ink-800">
+<body class="bg-white font-sans text-ink-800">
 
   <header id="app-navbar"></header>
 
   <main>
-    <!-- ================= HERO ================= -->
-    <section class="relative overflow-hidden bg-ink-950" aria-labelledby="hero-title">
-      <img src="img/hero.jpg" alt="" class="absolute inset-0 h-full w-full object-cover object-right opacity-90" fetchpriority="high">
-      <div class="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/85 to-ink-950/10"></div>
-      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cream to-transparent"></div>
+    <!-- ================= HERO BANNER ================= -->
+    <section class="mx-auto max-w-7xl px-4 pt-7 sm:px-6 lg:px-8" aria-labelledby="hero-title">
+      <div class="relative overflow-hidden rounded-[1.75rem] bg-brand-gradient px-6 py-8 text-white shadow-glow sm:px-10 sm:py-11">
+        <!-- Círculos decorativos translúcidos (estilo Figma) -->
+        <div class="pointer-events-none absolute -right-12 -top-12 h-64 w-64 rounded-full border border-white/25"></div>
+        <div class="pointer-events-none absolute right-6 -bottom-16 h-56 w-56 rounded-full border border-white/20"></div>
+        <div class="pointer-events-none absolute -right-4 bottom-2 h-40 w-40 rounded-full border border-white/20"></div>
 
-      <div class="relative mx-auto max-w-7xl px-4 pb-28 pt-16 sm:px-6 sm:pt-24 lg:px-8 lg:pb-36 lg:pt-28">
-        <div class="max-w-2xl animate-fade-up">
-          <span class="glass-dark inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-white/15">
-            <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span></span>
-            Abierto ahora · Entrega en 30 min
-          </span>
-          <h1 id="hero-title" class="mt-6 font-display text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Tu antojo,<br><span class="text-gradient">en tu puerta.</span>
-          </h1>
-          <p class="mt-5 max-w-lg text-base text-ink-200 sm:text-lg">
-            Hamburguesas jugosas, pizzas artesanales, tacos al pastor y mucho más. Recién hecho, rápido y siempre caliente.
-          </p>
+        <div class="relative flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+          <div class="max-w-xl animate-fade-up">
+            <p class="mb-2 flex items-center gap-1.5 text-xs font-medium text-white/90 sm:text-sm">
+              <span>🔥</span> Entrega en 30 minutos
+            </p>
+            <h1 id="hero-title" class="font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-5xl mb-0">
+              ¿Qué se te antoja<br>hoy?
+            </h1>
 
-          <form id="hero-search-form" class="mt-8 flex max-w-lg items-center gap-2 rounded-2xl bg-white p-2 shadow-lift" role="search">
-            <i class="bi bi-search ps-3 text-ink-400"></i>
-            <label for="search-input" class="visually-hidden">Buscar platillos</label>
-            <input id="search-input" type="search" autocomplete="off" placeholder="¿Qué se te antoja hoy?" class="min-w-0 flex-1 border-0 bg-transparent py-2 text-ink-900 outline-none placeholder:text-ink-400">
-            <button type="submit" class="btn btn-brand px-4 py-2.5">Buscar</button>
-          </form>
+            <!-- Buscador visible en móvil (en escritorio está en el navbar superior) -->
+            <form id="hero-search-form" class="mt-5 flex md:hidden items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm" role="search">
+              <i class="bi bi-search text-ink-400"></i>
+              <label for="search-input" class="visually-hidden">Buscar platillos</label>
+              <input id="search-input" type="search" autocomplete="off" placeholder="Buscar platillos, categorías..." class="min-w-0 flex-1 border-0 bg-transparent py-1 text-sm text-ink-900 outline-none placeholder:text-ink-400">
+            </form>
+          </div>
 
-          <dl class="mt-10 grid max-w-md grid-cols-3 gap-3">
-            <div class="glass-dark rounded-2xl px-4 py-3 ring-1 ring-white/10">
-              <dt class="text-[11px] font-medium uppercase tracking-wider text-ink-200">Rating</dt>
-              <dd class="mb-0 font-display text-2xl font-bold text-white">4.9<span class="text-brand-400">★</span></dd>
+          <dl class="mb-0 flex items-center gap-7 sm:gap-9 text-center">
+            <div>
+              <div class="mb-1 text-lg leading-none">⭐</div>
+              <dd class="mb-0 font-display text-base font-extrabold text-white sm:text-lg">4.8</dd>
+              <dt class="text-[11px] font-normal text-white/80">Rating</dt>
             </div>
-            <div class="glass-dark rounded-2xl px-4 py-3 ring-1 ring-white/10">
-              <dt class="text-[11px] font-medium uppercase tracking-wider text-ink-200">Entrega</dt>
-              <dd class="mb-0 font-display text-2xl font-bold text-white">30<span class="text-base text-ink-200"> min</span></dd>
+            <div>
+              <div class="mb-1 text-lg leading-none">🛵</div>
+              <dd class="mb-0 font-display text-base font-extrabold text-white sm:text-lg">30 min</dd>
+              <dt class="text-[11px] font-normal text-white/80">Entrega</dt>
             </div>
-            <div class="glass-dark rounded-2xl px-4 py-3 ring-1 ring-white/10">
-              <dt class="text-[11px] font-medium uppercase tracking-wider text-ink-200">Platillos</dt>
-              <dd id="stat-platillos" class="mb-0 font-display text-2xl font-bold text-white">—</dd>
+            <div>
+              <div class="mb-1 text-lg leading-none">🍽️</div>
+              <dd id="stat-platillos" class="mb-0 font-display text-base font-extrabold text-white sm:text-lg">12+</dd>
+              <dt class="text-[11px] font-normal text-white/80">Platillos</dt>
             </div>
           </dl>
         </div>
@@ -67,33 +69,28 @@
     </section>
 
     <!-- ================= CATÁLOGO ================= -->
-    <section id="menu" class="relative mx-auto -mt-12 max-w-7xl px-4 sm:px-6 lg:px-8" aria-labelledby="menu-title">
-      <div class="rounded-3xl bg-white p-4 shadow-card ring-1 ring-black/5 sm:p-5">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div id="category-filters" class="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="toolbar" aria-label="Filtrar por categoría"></div>
-          <div class="flex shrink-0 items-center gap-2">
-            <label for="sort-select" class="text-xs font-semibold uppercase tracking-wider text-ink-400 whitespace-nowrap">Ordenar</label>
-            <select id="sort-select" class="form-select form-select-sm w-auto py-2">
-              <option value="destacados">Destacados</option>
-              <option value="precio-asc">Precio: menor a mayor</option>
-              <option value="precio-desc">Precio: mayor a menor</option>
-              <option value="nombre">Nombre A–Z</option>
-            </select>
-          </div>
-        </div>
-      </div>
+    <section id="menu" class="mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8" aria-labelledby="menu-title">
+      <div id="category-filters" class="no-scrollbar flex gap-2.5 overflow-x-auto py-1" role="toolbar" aria-label="Filtrar por categoría"></div>
 
-      <div class="mb-6 mt-10 flex items-end justify-between gap-4">
-        <div>
-          <p class="mb-1 text-sm font-semibold uppercase tracking-wider text-brand-500">Nuestro menú</p>
-          <h2 id="menu-title" class="font-display text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl mb-0">
-            <span id="catalog-title">Todo el menú</span> <span id="catalog-count" class="text-xl font-medium text-ink-400"></span>
+      <div class="mb-5 mt-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <h2 id="menu-title" class="font-display text-lg font-bold tracking-tight text-ink-900 mb-0">
+            <span id="catalog-title">Todo el menú</span> <span id="catalog-count" class="text-sm font-normal text-ink-400"></span>
           </h2>
+          <button type="button" id="btn-clear-filters" hidden class="btn btn-link text-xs font-semibold text-brand-600 p-0">Limpiar filtros</button>
         </div>
-        <button type="button" id="btn-clear-filters" hidden class="btn btn-link text-sm font-semibold text-brand-600 p-0">Limpiar filtros</button>
+        <div class="flex shrink-0 items-center gap-2">
+          <label for="sort-select" class="text-xs font-medium text-ink-400 whitespace-nowrap">Ordenar:</label>
+          <select id="sort-select" class="form-select form-select-sm w-auto rounded-full border-ink-200 py-1.5 px-3 text-xs font-medium text-ink-700">
+            <option value="destacados">Destacados</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="nombre">Nombre A–Z</option>
+          </select>
+        </div>
       </div>
 
-      <div id="product-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-live="polite"></div>
+      <div id="product-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"></div>
 
       <div id="catalog-empty" hidden class="rounded-3xl border-2 border-dashed border-ink-100 bg-white p-14 text-center">
         <div class="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-2xl bg-cream text-3xl">🔍</div>
@@ -110,28 +107,26 @@
     </section>
 
     <!-- ================= CÓMO FUNCIONA ================= -->
-    <section class="mx-auto mt-24 max-w-7xl px-4 sm:px-6 lg:px-8" aria-labelledby="how-title">
-      <div class="relative overflow-hidden rounded-[2rem] bg-ink-900 px-6 py-14 sm:px-12">
-        <div class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand-500/30 blur-3xl"></div>
-        <div class="pointer-events-none absolute -bottom-24 left-10 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl"></div>
+    <section class="mx-auto mt-20 max-w-7xl px-4 sm:px-6 lg:px-8" aria-labelledby="how-title">
+      <div class="relative overflow-hidden rounded-[1.75rem] bg-ink-50 px-6 py-12 ring-1 ring-ink-100 sm:px-12">
         <div class="relative">
-          <p class="mb-2 text-center text-sm font-semibold uppercase tracking-wider text-brand-400">Así de fácil</p>
-          <h2 id="how-title" class="text-center font-display text-3xl font-extrabold text-white sm:text-4xl">Pide en 3 pasos</h2>
-          <ol class="mt-12 grid list-none gap-6 ps-0 md:grid-cols-3">
-            <li class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10 transition hover:bg-white/10">
+          <p class="mb-1.5 text-center text-xs font-semibold uppercase tracking-wider text-brand-500">Así de fácil</p>
+          <h2 id="how-title" class="text-center font-display text-2xl font-extrabold text-ink-900 sm:text-3xl">Pide en 3 pasos</h2>
+          <ol class="mt-10 grid list-none gap-6 ps-0 md:grid-cols-3">
+            <li class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
               <span class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-gradient text-xl text-white shadow-glow"><i class="bi bi-hand-index-thumb"></i></span>
-              <h3 class="mt-5 font-display text-lg font-bold text-white">1. Elige tus platillos</h3>
-              <p class="mb-0 text-sm text-ink-200">Explora el menú, filtra por categoría y agrega al carrito.</p>
+              <h3 class="mt-4 font-display text-base font-bold text-ink-900">1. Elige tus platillos</h3>
+              <p class="mb-0 text-sm text-ink-500">Explora el menú, filtra por categoría y agrega al carrito.</p>
             </li>
-            <li class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10 transition hover:bg-white/10">
+            <li class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
               <span class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-gradient text-xl text-white shadow-glow"><i class="bi bi-geo-alt"></i></span>
-              <h3 class="mt-5 font-display text-lg font-bold text-white">2. Confirma tu entrega</h3>
-              <p class="mb-0 text-sm text-ink-200">Indica tu dirección y paga en efectivo o con tarjeta al recibir.</p>
+              <h3 class="mt-4 font-display text-base font-bold text-ink-900">2. Confirma tu entrega</h3>
+              <p class="mb-0 text-sm text-ink-500">Indica tu dirección y paga en efectivo o con tarjeta al recibir.</p>
             </li>
-            <li class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10 transition hover:bg-white/10">
+            <li class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
               <span class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-gradient text-xl text-white shadow-glow"><i class="bi bi-scooter"></i></span>
-              <h3 class="mt-5 font-display text-lg font-bold text-white">3. Sigue tu pedido</h3>
-              <p class="mb-0 text-sm text-ink-200">Mira el estado en tiempo real hasta que llegue a tu puerta.</p>
+              <h3 class="mt-4 font-display text-base font-bold text-ink-900">3. Sigue tu pedido</h3>
+              <p class="mb-0 text-sm text-ink-500">Mira el estado en tiempo real hasta que llegue a tu puerta.</p>
             </li>
           </ol>
         </div>

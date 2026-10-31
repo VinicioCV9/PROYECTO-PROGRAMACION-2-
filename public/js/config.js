@@ -4,28 +4,29 @@
  * si se abre con Live Server u otro puerto/file://, apunta a http://localhost:4000/api.
  */
 const API_PORT = '4000';
+const LIVE_SERVER_PORTS = ['5500', '5501', '5502', '3000', '8080'];
 const { protocol, hostname, port } = window.location;
 const isLocal = ['localhost', '127.0.0.1'].includes(hostname);
 
 export const API_BASE =
-  protocol === 'file:' || (isLocal && port !== API_PORT) ? `http://localhost:${API_PORT}/api` : '/api';
+  protocol === 'file:' || (isLocal && LIVE_SERVER_PORTS.includes(port)) ? `http://localhost:${API_PORT}/api` : '/api';
 
 export const STORAGE_KEYS = Object.freeze({
   token: 'foodexpress:token',
   user: 'foodexpress:user',
-  cart: 'foodexpress:cart:v2',
+  cart: 'foodexpress:cart:v3',
   lastOrder: 'foodexpress:last-order',
   flash: 'foodexpress:flash',
 });
 
 /** Valores por defecto; se sincronizan con GET /api/config (el servidor es la fuente de verdad). */
 export const PRICING = {
-  costoEnvio: 2.5,
-  tasaImpuesto: 0.13,
+  costoEnvio: 15,
+  tasaImpuesto: 0.12,
 };
 
-export const CURRENCY = { locale: 'en-US', code: 'USD' };
-export const DATE_LOCALE = 'es-CR';
+export const CURRENCY = { locale: 'es-GT', code: 'GTQ' };
+export const DATE_LOCALE = 'es-GT';
 export const MAX_QTY = 99;
 export const REQUEST_TIMEOUT_MS = 12000;
 export const ORDER_REFRESH_MS = 15000;

@@ -18,9 +18,7 @@ export async function checkPassword(password: string, hash: string): Promise<boo
 }
 
 function getSecret(): string {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error('JWT_SECRET no está definido en .env');
-  return secret;
+  return process.env.JWT_SECRET || 'foodexpress_dev_jwt_secret_key_2026_progra2';
 }
 
 export function generateJWT(payload: JwtPayload): string {

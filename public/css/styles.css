@@ -5,44 +5,44 @@
 
 /* ---------- 1. Tokens: alinear Bootstrap con la paleta de marca ---------- */
 :root {
-  --brand: #ff5a1f;
-  --brand-600: #f03f0a;
-  --brand-rgb: 255, 90, 31;
-  --ink: #171310;
+  --brand: #ff5c28;
+  --brand-600: #e84c1a;
+  --brand-rgb: 255, 92, 40;
+  --ink: #111827;
 
   --bs-primary: var(--brand);
   --bs-primary-rgb: var(--brand-rgb);
   --bs-body-font-family: 'Inter', system-ui, sans-serif;
-  --bs-body-bg: #fbf8f5;
-  --bs-body-color: #26211d;
-  --bs-border-color: #ece7e2;
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #1f2937;
+  --bs-border-color: #e5e7eb;
   --bs-border-radius: .75rem;
   --bs-border-radius-lg: 1rem;
   --bs-link-color: var(--brand-600);
-  --bs-link-color-rgb: 240, 63, 10;
-  --bs-link-hover-color: #c72e08;
+  --bs-link-color-rgb: 232, 76, 26;
+  --bs-link-hover-color: #c73b0f;
   --bs-focus-ring-color: rgba(var(--brand-rgb), .25);
 }
 
 /* Reset mínimo de bordes (lo que haría el preflight de Tailwind, sin romper Bootstrap) */
-*, ::before, ::after { border-width: 0; border-style: solid; border-color: #ece7e2; }
+*, ::before, ::after { border-width: 0; border-style: solid; border-color: #e5e7eb; }
 /* Doble selector: más específico que .flex/.grid de Tailwind (que también son !important) */
 [hidden][hidden] { display: none !important; }
-html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
-body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+body { background-color: #ffffff !important; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 img { max-width: 100%; }
 a { text-decoration: none; }
-::selection { background: rgba(var(--brand-rgb), .18); color: #9e270e; }
+::selection { background: rgba(var(--brand-rgb), .18); color: #9e2f0e; }
 
 /* ---------- 2. Componentes Bootstrap con look de marca ---------- */
-.btn { --bs-btn-font-weight: 600; border-radius: .875rem; }
+.btn { --bs-btn-font-weight: 600; border-radius: 9999px; }
 .btn-brand {
   --bs-btn-color: #fff; --bs-btn-bg: var(--brand); --bs-btn-border-color: var(--brand);
   --bs-btn-hover-color: #fff; --bs-btn-hover-bg: var(--brand-600); --bs-btn-hover-border-color: var(--brand-600);
-  --bs-btn-active-bg: #c72e08; --bs-btn-active-border-color: #c72e08; --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #c73b0f; --bs-btn-active-border-color: #c73b0f; --bs-btn-active-color: #fff;
   --bs-btn-disabled-bg: var(--brand); --bs-btn-disabled-border-color: var(--brand); --bs-btn-disabled-color: #fff;
   --bs-btn-focus-shadow-rgb: var(--brand-rgb);
-  box-shadow: 0 10px 24px -10px rgba(var(--brand-rgb), .6);
+  box-shadow: 0 6px 18px -6px rgba(var(--brand-rgb), .55);
 }
 
 .form-control, .form-select {
@@ -64,8 +64,8 @@ a { text-decoration: none; }
 .toast-container { z-index: 1090; }
 .toast { border: 0; border-radius: 1rem; box-shadow: 0 18px 40px -12px rgba(23,19,16,.35); overflow: hidden; }
 
-.nav-pills .nav-link { color: #6b635b; font-weight: 600; border-radius: .875rem; }
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link { background: var(--ink); color: #fff; }
+.nav-pills .nav-link { color: #6b7280; font-weight: 600; border-radius: 9999px; }
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link { background: var(--brand); color: #fff; box-shadow: 0 4px 12px -3px rgba(var(--brand-rgb), .45); }
 
 .dropdown-menu { border: 1px solid #ece7e2; border-radius: 1rem; padding: .5rem; box-shadow: 0 20px 40px -16px rgba(23,19,16,.25); }
 .dropdown-item { border-radius: .6rem; padding: .5rem .75rem; font-size: .9rem; }
@@ -103,7 +103,7 @@ a { text-decoration: none; }
 .product-card:hover img { transform: scale(1.06); }
 
 /* Chips de categoría */
-.chip[aria-pressed='true'] { background: var(--ink) !important; color: #fff !important; border-color: var(--ink) !important; }
+.chip[aria-pressed='true'] { background: var(--brand) !important; color: #fff !important; border-color: var(--brand) !important; box-shadow: 0 6px 16px -4px rgba(var(--brand-rgb), .45); }
 
 /* Tarjetas de método de pago (radio) */
 .pay-option input:checked + label { border-color: var(--brand) !important; background: #fff6f1 !important; box-shadow: 0 0 0 3px rgba(var(--brand-rgb), .12); }

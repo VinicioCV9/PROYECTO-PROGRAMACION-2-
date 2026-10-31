@@ -172,12 +172,13 @@ export function confirmDialog({ title = '¿Estás seguro?', message = '', confir
 
 const LOGO = `
   <a href="index.html" class="flex items-center gap-2.5 shrink-0" aria-label="FoodExpress inicio">
-    <span class="grid h-10 w-10 place-items-center rounded-2xl bg-brand-gradient text-white shadow-glow"><i class="bi bi-lightning-charge-fill text-lg"></i></span>
+    <span class="grid h-10 w-10 place-items-center rounded-full bg-brand-gradient font-display text-sm font-black tracking-tight text-white shadow-sm">FX</span>
     <span class="font-display text-xl font-extrabold tracking-tight text-ink-900">Food<span class="text-brand-500">Express</span></span>
   </a>`;
 
 function navLinks(user, active) {
-  const links = [{ href: 'index.html', key: 'menu', label: 'Menú', icon: 'bi-grid' }];
+  const links = [];
+  if (active !== 'menu') links.push({ href: 'index.html', key: 'menu', label: 'Menú', icon: 'bi-grid' });
   if (user) links.push({ href: 'confirmacion.html', key: 'pedidos', label: 'Mis pedidos', icon: 'bi-receipt' });
   // El enlace al panel SOLO existe en el DOM para administradores
   if (user?.rol === 'admin') links.push({ href: 'admin.html', key: 'admin', label: 'Panel admin', icon: 'bi-speedometer2' });
@@ -192,52 +193,83 @@ function renderNavbar(active) {
   const onCartPage = active === 'carrito';
   const initials = user ? user.nombre.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase() : '';
 
-  header.className = 'sticky-top';
+  header.className = 'bg-white border-b border-ink-100';
   header.innerHTML = `
-    <nav class="glass border-b border-black/5">
-      <div class="mx-auto flex h-[72px] max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
+    <nav class="bg-white">
+      <div class="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         ${LOGO}
-        <ul class="hidden md:flex items-center gap-1 ms-8 mb-0 ps-0 list-none">
-          ${links.map((l) => `
-            <li><a href="${l.href}" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition ${l.active ? 'bg-ink-900 text-white' : 'text-ink-500 hover:bg-black/5 hover:text-ink-900'}" ${l.active ? 'aria-current="page"' : ''}>
-              <i class="bi ${l.icon}"></i>${l.label}${l.key === 'admin' ? '<span class="badge bg-brand-500 ms-1 text-[10px]">ADMIN</span>' : ''}
-            </a></li>`).join('')}
-        </ul>
-        <div class="ms-auto flex items-center gap-2">
-          ${onCartPage ? '' : `
-          <button type="button" id="nav-cart-btn" class="relative flex items-center gap-2 rounded-2xl bg-ink-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-800 active:scale-95" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas">
-            <i class="bi bi-bag"></i><span class="hidden sm:inline">Carrito</span>
-            <span data-cart-count hidden class="badge rounded-pill bg-brand-500 min-w-[1.4rem]">0</span>
-          </button>`}
+        <form id="nav-search-form" class="hidden md:flex flex-1 max-w-xl mx-auto items-center gap-2.5 rounded-full bg-cream px-4 py-2.5 transition focus-within:ring-2 focus-within:ring-brand-300" role="search">
+          <i class="bi bi-search text-ink-400 text-sm"></i>
+          <label for="nav-search-input" class="visually-hidden">Buscar platillos o categorías</label>
+          <input id="nav-search-input" type="search" autocomplete="off" placeholder="Buscar platillos, categorías..." class="w-full border-0 bg-transparent text-sm text-ink-800 outline-none placeholder:text-ink-400">
+        </form>
+        <div class="flex items-center gap-2.5">
+          ${links.length ? `
+          <ul class="hidden lg:flex items-center gap-1 mb-0 ps-0 list-none me-1">
+            ${links.map((l) => `
+              <li><a href="${l.href}" class="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition ${l.active ? 'bg-brand-50 text-brand-600' : 'text-ink-500 hover:bg-cream hover:text-ink-900'}" ${l.active ? 'aria-current="page"' : ''}>
+                <i class="bi ${l.icon}"></i>${l.label}${l.key === 'admin' ? '<span class="badge rounded-pill bg-brand-500 ms-1 text-[10px]">ADMIN</span>' : ''}
+              </a></li>`).join('')}
+          </ul>` : ''}
           ${user ? `
           <div class="dropdown hidden md:block">
-            <button class="flex items-center gap-2 rounded-2xl bg-white py-1.5 pl-1.5 pr-3 shadow-card ring-1 ring-black/5 transition hover:ring-black/10" data-bs-toggle="dropdown" aria-expanded="false" id="user-menu-btn">
-              <span class="grid h-8 w-8 place-items-center rounded-xl ${user.rol === 'admin' ? 'bg-ink-900' : 'bg-brand-gradient'} text-xs font-bold text-white">${escapeHTML(initials)}</span>
-              <span class="text-sm font-semibold text-ink-800 max-w-[120px] truncate">${escapeHTML(user.nombre.split(' ')[0])}</span>
+            <button class="flex items-center gap-2 rounded-full bg-cream py-1.5 pl-1.5 pr-3 transition hover:bg-ink-200/60" data-bs-toggle="dropdown" aria-expanded="false" id="user-menu-btn">
+              <span class="grid h-8 w-8 place-items-center rounded-full ${user.rol === 'admin' ? 'bg-ink-900' : 'bg-brand-gradient'} text-xs font-bold text-white">${escapeHTML(initials)}</span>
+              <span class="text-sm font-semibold text-ink-800 max-w-[110px] truncate">${escapeHTML(user.nombre.split(' ')[0])}</span>
               <i class="bi bi-chevron-down text-xs text-ink-400"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end mt-2" style="min-width:240px">
               <li class="px-3 py-2">
                 <p class="mb-0 text-sm font-semibold text-ink-900 truncate">${escapeHTML(user.nombre)}</p>
                 <p class="mb-1 text-xs text-ink-400 truncate">${escapeHTML(user.email)}</p>
-                <span class="badge ${user.rol === 'admin' ? 'bg-dark' : 'bg-brand-100 text-brand-700'}">${user.rol === 'admin' ? 'Administrador' : 'Cliente'}</span>
+                <span class="badge rounded-pill ${user.rol === 'admin' ? 'bg-dark' : 'bg-brand-100 text-brand-700'}">${user.rol === 'admin' ? 'Administrador' : 'Cliente'}</span>
               </li>
               <li><hr class="dropdown-divider"></li>
-              ${links.filter((l) => l.key !== 'menu').map((l) => `<li><a class="dropdown-item flex items-center gap-2" href="${l.href}"><i class="bi ${l.icon}"></i>${l.label}</a></li>`).join('')}
+              <li><a class="dropdown-item flex items-center gap-2" href="confirmacion.html"><i class="bi bi-receipt"></i>Mis pedidos</a></li>
+              ${user.rol === 'admin' ? '<li><a class="dropdown-item flex items-center gap-2" href="admin.html"><i class="bi bi-speedometer2"></i>Panel admin</a></li>' : ''}
               <li><button class="dropdown-item flex items-center gap-2 text-rose-600" data-logout><i class="bi bi-box-arrow-right"></i>Cerrar sesión</button></li>
             </ul>
           </div>` : `
-          <a href="login.html" id="nav-login-btn" class="hidden md:flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold text-ink-800 ring-1 ring-black/10 bg-white transition hover:ring-brand-300 hover:text-brand-600">
-            <i class="bi bi-person-circle"></i>Ingresar
+          <a href="login.html" id="nav-login-btn" class="grid h-10 w-10 place-items-center rounded-full text-ink-700 transition hover:bg-cream hover:text-brand-600" aria-label="Iniciar sesión" title="Iniciar sesión">
+            <i class="bi bi-person text-xl"></i>
           </a>`}
-          <button type="button" class="md:hidden grid h-11 w-11 place-items-center rounded-2xl bg-white ring-1 ring-black/10" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas" aria-label="Abrir menú">
+          ${onCartPage ? '' : `
+          <button type="button" id="nav-cart-btn" class="relative flex items-center gap-2 rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 active:scale-95" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas">
+            <i class="bi bi-cart3 text-base"></i><span>Carrito</span>
+            <span data-cart-count hidden class="badge rounded-pill bg-white text-brand-600 min-w-[1.35rem]">0</span>
+          </button>`}
+          <button type="button" class="md:hidden grid h-10 w-10 place-items-center rounded-full bg-cream text-ink-700" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas" aria-label="Abrir menú">
             <i class="bi bi-list text-xl"></i>
           </button>
         </div>
       </div>
     </nav>`;
 
-  renderMobileMenu(user, links);
+  const navSearchForm = document.getElementById('nav-search-form');
+  const navSearchInput = document.getElementById('nav-search-input');
+  const pageSearchInput = document.getElementById('search-input');
+
+  if (navSearchInput && pageSearchInput) {
+    navSearchInput.value = pageSearchInput.value;
+    navSearchInput.addEventListener('input', () => {
+      pageSearchInput.value = navSearchInput.value;
+      pageSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  navSearchForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = navSearchInput?.value.trim() || '';
+    if (pageSearchInput) {
+      pageSearchInput.value = q;
+      pageSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.location.href = q ? `index.html?q=${encodeURIComponent(q)}` : 'index.html';
+    }
+  });
+
+  renderMobileMenu(user, [{ href: 'index.html', key: 'menu', label: 'Menú', icon: 'bi-grid', active: active === 'menu' }, ...links]);
 }
 
 /** Offcanvas de navegación móvil (se monta en <body> porque backdrop-filter rompe position:fixed). */
@@ -352,31 +384,28 @@ function renderCartBadges() {
 function renderFooter() {
   const footer = document.getElementById('app-footer');
   if (!footer) return;
-  footer.className = 'mt-16 bg-ink-950 text-ink-200';
+  footer.className = 'mt-20 border-t border-ink-100 bg-ink-50 text-ink-500';
   footer.innerHTML = `
-    <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
+    <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4 lg:px-8">
       <div class="md:col-span-2">
-        <a href="index.html" class="flex items-center gap-2.5">
-          <span class="grid h-10 w-10 place-items-center rounded-2xl bg-brand-gradient text-white"><i class="bi bi-lightning-charge-fill"></i></span>
-          <span class="font-display text-xl font-extrabold text-white">Food<span class="text-brand-400">Express</span></span>
-        </a>
-        <p class="mt-4 max-w-sm text-sm text-ink-400">Comida caliente, recién hecha y en la puerta de tu casa en minutos. Pide, sigue tu pedido en tiempo real y disfruta.</p>
+        ${LOGO}
+        <p class="mt-4 max-w-sm text-sm text-ink-500">Comida caliente, recién hecha y en la puerta de tu casa en minutos. Pide, sigue tu pedido en tiempo real y disfruta.</p>
       </div>
       <div>
-        <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-white">Navegación</h3>
+        <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink-900">Navegación</h3>
         <ul class="list-none ps-0 space-y-2 text-sm">
-          <li><a class="text-ink-400 hover:text-brand-400" href="index.html">Menú</a></li>
-          <li><a class="text-ink-400 hover:text-brand-400" href="carrito.html">Carrito</a></li>
-          <li><a class="text-ink-400 hover:text-brand-400" href="confirmacion.html">Mis pedidos</a></li>
+          <li><a class="text-ink-500 hover:text-brand-500" href="index.html">Menú</a></li>
+          <li><a class="text-ink-500 hover:text-brand-500" href="carrito.html">Carrito</a></li>
+          <li><a class="text-ink-500 hover:text-brand-500" href="confirmacion.html">Mis pedidos</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-white">Horario</h3>
-        <p class="text-sm text-ink-400 mb-1">Lun – Dom · 10:00 – 23:00</p>
-        <p class="text-sm text-ink-400"><i class="bi bi-telephone me-1"></i>+506 2222-2222</p>
+        <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink-900">Horario</h3>
+        <p class="text-sm text-ink-500 mb-1">Lun – Dom · 10:00 – 23:00</p>
+        <p class="text-sm text-ink-500"><i class="bi bi-telephone me-1 text-brand-500"></i>+502 2222-2222</p>
       </div>
     </div>
-    <div class="border-t border-white/10">
+    <div class="border-t border-ink-100">
       <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-ink-400 sm:flex-row sm:px-6 lg:px-8">
         <p class="mb-0">© ${new Date().getFullYear()} FoodExpress · Sistema Web de Pedidos de Comida a Domicilio</p>
         <p class="mb-0">Proyecto Programación II</p>

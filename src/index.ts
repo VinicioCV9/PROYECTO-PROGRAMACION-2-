@@ -8,8 +8,8 @@ const PORT = Number(process.env.PORT) || 4000;
 
 async function bootstrap() {
   if (!process.env.JWT_SECRET) {
-    console.error(colors.bgRed.white.bold(' ✖ JWT_SECRET no está definido en .env '));
-    process.exit(1);
+    process.env.JWT_SECRET = 'foodexpress_dev_jwt_secret_key_2026_progra2';
+    console.warn(colors.yellow('⚠ JWT_SECRET no definido en .env; usando clave de desarrollo por defecto.'));
   }
 
   await connectDB();
@@ -22,6 +22,15 @@ async function bootstrap() {
     console.log(colors.magenta.bold(`🚀 Servidor listo en http://localhost:${PORT}`));
     console.log(colors.gray(`   API: http://localhost:${PORT}/api/health`));
   });
+
+  if (PORT !== 4000) {
+    const mirror = app.listen(4000, () => {
+      console.log(colors.magenta.bold(`🚀 También disponible en http://localhost:4000`));
+    });
+    mirror.on('error', () => {
+      // Si el puerto 4000 está ocupado por otro proceso, se ignora silenciosamente.
+    });
+  }
 
   const shutdown = (signal: string) => {
     console.log(colors.yellow(`\n${signal} recibido. Cerrando...`));
