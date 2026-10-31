@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es" class="auth-pending">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de administración | FoodExpress</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#171310">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='26' fill='%23171310'/><text y='70' x='50' text-anchor='middle' font-size='60'>⚡</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/tailwind.config.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-cream font-sans text-ink-800">
+
+  <header id="app-navbar"></header>
+
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="mb-1 text-sm font-semibold uppercase tracking-wider text-brand-500">Administración</p>
+        <h1 class="font-display text-4xl font-extrabold tracking-tight text-ink-900 mb-1">Panel de control</h1>
+        <p class="text-ink-400 mb-0">Hola, <span id="admin-name" class="font-semibold text-ink-700"></span>. Así va el negocio hoy.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="last-sync" class="text-xs text-ink-400"></span>
+        <button type="button" id="btn-refresh" class="btn btn-light px-3 py-2 ring-1 ring-black/5"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
+      </div>
+    </div>
+
+    <!-- ============ KPIs ============ -->
+    <section aria-label="Indicadores" class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+      <article class="rounded-3xl bg-ink-900 p-5 text-white shadow-lift">
+        <div class="flex items-center justify-between">
+          <p class="mb-0 text-xs font-semibold uppercase tracking-wider text-ink-200">Total pedidos</p>
+          <span class="grid h-9 w-9 place-items-center rounded-xl bg-white/10"><i class="bi bi-receipt"></i></span>
+        </div>
+        <p id="kpi-total" class="mt-3 mb-0 font-display text-3xl font-extrabold">—</p>
+        <p id="kpi-hoy" class="mb-0 text-xs text-ink-200"></p>
+      </article>
+      <article class="rounded-3xl bg-white p-5 shadow-card ring-1 ring-black/5">
+        <div class="flex items-center justify-between">
+          <p class="mb-0 text-xs font-semibold uppercase tracking-wider text-ink-400">Ingresos</p>
+          <span class="grid h-9 w-9 place-items-center rounded-xl bg-emerald-50 text-emerald-600"><i class="bi bi-cash-coin"></i></span>
+        </div>
+        <p id="kpi-ingresos" class="mt-3 mb-0 font-display text-3xl font-extrabold text-ink-900">—</p>
+        <p id="kpi-ingresos-hoy" class="mb-0 text-xs text-ink-400"></p>
+      </article>
+      <article class="rounded-3xl bg-white p-5 shadow-card ring-1 ring-black/5">
+        <div class="flex items-center justify-between">
+          <p class="mb-0 text-xs font-semibold uppercase tracking-wider text-ink-400">Pendientes</p>
+          <span class="grid h-9 w-9 place-items-center rounded-xl estado-pendiente"><i class="bi bi-hourglass-split"></i></span>
+        </div>
+        <p id="kpi-pendiente" class="mt-3 mb-0 font-display text-3xl font-extrabold text-ink-900">—</p>
+        <p class="mb-0 text-xs text-ink-400">Esperan confirmación</p>
+      </article>
+      <article class="rounded-3xl bg-white p-5 shadow-card ring-1 ring-black/5">
+        <div class="flex items-center justify-between">
+          <p class="mb-0 text-xs font-semibold uppercase tracking-wider text-ink-400">En preparación</p>
+          <span class="grid h-9 w-9 place-items-center rounded-xl estado-en_preparacion"><i class="bi bi-fire"></i></span>
+        </div>
+        <p id="kpi-en_preparacion" class="mt-3 mb-0 font-display text-3xl font-extrabold text-ink-900">—</p>
+        <p id="kpi-en_camino" class="mb-0 text-xs text-ink-400"></p>
+      </article>
+      <article class="rounded-3xl bg-white p-5 shadow-card ring-1 ring-black/5">
+        <div class="flex items-center justify-between">
+          <p class="mb-0 text-xs font-semibold uppercase tracking-wider text-ink-400">Entregados</p>
+          <span class="grid h-9 w-9 place-items-center rounded-xl estado-entregado"><i class="bi bi-bag-check-fill"></i></span>
+        </div>
+        <p id="kpi-entregado" class="mt-3 mb-0 font-display text-3xl font-extrabold text-ink-900">—</p>
+        <p id="kpi-cancelado" class="mb-0 text-xs text-ink-400"></p>
+      </article>
+    </section>
+
+    <!-- ============ Pestañas ============ -->
+    <ul class="nav nav-pills mt-10 mb-6 inline-flex gap-1 rounded-2xl bg-white p-1 shadow-card ring-1 ring-black/5" id="admin-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active px-4 py-2.5" id="tab-pedidos" data-bs-toggle="pill" data-bs-target="#pane-pedidos" type="button" role="tab" aria-controls="pane-pedidos" aria-selected="true">
+          <i class="bi bi-receipt me-1"></i>Pedidos
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link px-4 py-2.5" id="tab-productos" data-bs-toggle="pill" data-bs-target="#pane-productos" type="button" role="tab" aria-controls="pane-productos" aria-selected="false">
+          <i class="bi bi-egg-fried me-1"></i>Productos
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- ---------- Gestión de pedidos ---------- -->
+      <section class="tab-pane fade show active" id="pane-pedidos" role="tabpanel" aria-labelledby="tab-pedidos" tabindex="0">
+        <div class="rounded-3xl bg-white shadow-card ring-1 ring-black/5">
+          <div class="flex flex-col gap-4 border-b border-black/5 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
+            <div id="estado-filters" class="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="toolbar" aria-label="Filtrar por estado"></div>
+            <form id="orders-search-form" class="flex shrink-0 items-center gap-2 rounded-2xl bg-cream px-3 ring-1 ring-black/5" role="search">
+              <i class="bi bi-search text-ink-400"></i>
+              <label for="orders-search" class="visually-hidden">Buscar pedidos</label>
+              <input id="orders-search" type="search" autocomplete="off" placeholder="N.º de orden, cliente o teléfono" class="w-full border-0 bg-transparent lg:w-56 py-2.5 text-sm outline-none placeholder:text-ink-400">
+            </form>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">Pedido</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col" class="text-end">Total</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col" style="min-width:190px">Actualizar</th>
+                  <th scope="col" class="text-end"><span class="visually-hidden">Acciones</span></th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+
+          <div id="orders-empty" hidden class="p-12 text-center">
+            <div class="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-2xl bg-cream text-3xl">📭</div>
+            <p class="font-display text-lg font-bold text-ink-900 mb-1">No hay pedidos</p>
+            <p class="text-sm text-ink-400 mb-0">Cuando lleguen pedidos con este filtro aparecerán aquí.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 border-t border-black/5 px-5 py-4 text-sm">
+            <span id="orders-meta" class="text-ink-400"></span>
+            <div class="flex items-center gap-2">
+              <button type="button" id="orders-prev" class="btn btn-light btn-sm px-3 ring-1 ring-black/5" aria-label="Página anterior"><i class="bi bi-chevron-left"></i></button>
+              <span id="orders-page" class="font-semibold text-ink-700"></span>
+              <button type="button" id="orders-next" class="btn btn-light btn-sm px-3 ring-1 ring-black/5" aria-label="Página siguiente"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Gestión de productos ---------- -->
+      <section class="tab-pane fade" id="pane-productos" role="tabpanel" aria-labelledby="tab-productos" tabindex="0">
+        <div class="rounded-3xl bg-white shadow-card ring-1 ring-black/5">
+          <div class="flex flex-col gap-4 border-b border-black/5 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div>
+              <h2 class="font-display text-lg font-bold text-ink-900 mb-0">Catálogo de platillos <span id="products-count" class="text-ink-400 font-medium"></span></h2>
+              <p class="mb-0 text-xs text-ink-400">Los platillos agotados no se muestran en el menú público.</p>
+            </div>
+            <button type="button" id="btn-new-product" class="btn btn-brand px-4 py-2.5"><i class="bi bi-plus-lg me-1"></i>Nuevo platillo</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">Platillo</th>
+                  <th scope="col">Categoría</th>
+                  <th scope="col" class="text-end">Precio</th>
+                  <th scope="col">Disponible</th>
+                  <th scope="col" class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="products-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ Modal: detalle de pedido ============ -->
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header border-b border-black/5 px-6 py-4">
+          <div>
+            <h2 class="modal-title font-display text-xl font-bold text-ink-900" id="orderModalTitle">Pedido</h2>
+            <p id="om-fecha" class="mb-0 text-xs text-ink-400"></p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body px-6 py-5" id="om-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Modal: crear / editar producto ============ -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <form id="product-form" novalidate>
+          <div class="modal-header border-b border-black/5 px-6 py-4">
+            <h2 class="modal-title font-display text-xl font-bold text-ink-900" id="productModalTitle">Nuevo platillo</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body px-6 py-5">
+            <div class="grid gap-5 md:grid-cols-[180px_1fr]">
+              <div>
+                <img id="pf-preview" src="" alt="Vista previa" class="aspect-square w-full rounded-2xl object-cover ring-1 ring-black/5">
+                <p class="mt-2 mb-0 text-center text-xs text-ink-400">Vista previa</p>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="form-floating sm:col-span-2">
+                  <input type="text" class="form-control" id="pf-nombre" name="nombre" placeholder="Nombre" maxlength="100" required>
+                  <label for="pf-nombre">Nombre del platillo</label>
+                  <div class="invalid-feedback"></div>
+                </div>
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="pf-precio" name="precio" placeholder="Precio" min="0.01" max="10000" step="0.01" required>
+                  <label for="pf-precio">Precio (USD)</label>
+                  <div class="invalid-feedback"></div>
+                </div>
+                <div class="form-floating">
+                  <select class="form-select" id="pf-categoria" name="categoria" required></select>
+                  <label for="pf-categoria">Categoría</label>
+                  <div class="invalid-feedback"></div>
+                </div>
+                <div class="form-floating sm:col-span-2">
+                  <input type="text" class="form-control" id="pf-imagen" name="imagen" placeholder="Imagen" maxlength="300">
+                  <label for="pf-imagen">Imagen (URL o ruta, ej. img/productos/pizza.jpg)</label>
+                </div>
+                <div class="form-floating sm:col-span-2">
+                  <textarea class="form-control" id="pf-descripcion" name="descripcion" placeholder="Descripción" style="height:96px" maxlength="400"></textarea>
+                  <label for="pf-descripcion">Descripción</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="pf-disponible" name="disponible" checked>
+                  <label class="form-check-label text-sm font-semibold" for="pf-disponible">Disponible</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="pf-destacado" name="destacado">
+                  <label class="form-check-label text-sm font-semibold" for="pf-destacado">Destacado (Popular)</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-t border-black/5 px-6 py-4">
+            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" id="btn-save-product" class="btn btn-brand px-4"><i class="bi bi-check-lg me-1"></i>Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer id="app-footer"></footer>
+
+  <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="top:72px" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/pages/admin.js"></script>
+</body>
+</html>

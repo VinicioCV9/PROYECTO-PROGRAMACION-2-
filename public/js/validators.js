@@ -18,6 +18,8 @@ export const rules = {
   telefono: (x) => (TELEFONO_RE.test(v(x)) ? '' : 'Ingresa un teléfono válido (ej. 8888-8888).'),
   oneOf: (list, msg) => (x) => (list.includes(v(x)) ? '' : msg),
   matches: (field, msg) => (x, data) => (x === data[field] ? '' : msg),
+  optional: (rule) => (x, data) => (v(x) ? rule(x, data) : ''),
+  precio: (x) => (Number(x) > 0 && Number(x) <= 10000 ? '' : 'Ingresa un precio válido mayor a 0.'),
 };
 
 export const schemas = {
@@ -30,6 +32,13 @@ export const schemas = {
     email: [rules.email],
     password: [rules.password],
     confirmar: [rules.matches('password', 'Las contraseñas no coinciden.')],
+    telefono: [rules.optional(rules.telefono)],
+    direccion: [rules.optional(rules.minLen(8, 'Agrega una dirección más detallada (mín. 8 caracteres).'))],
+  },
+  producto: {
+    nombre: [rules.minLen(3, 'El nombre debe tener al menos 3 caracteres.')],
+    precio: [rules.precio],
+    categoria: [rules.required('Selecciona una categoría.')],
   },
   checkout: {
     nombre: [rules.minLen(3, 'Ingresa el nombre de quien recibe.')],

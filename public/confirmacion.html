@@ -3,141 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirmación de Pedido | FoodExpress</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ff5722'/><text y='68' x='50' text-anchor='middle' font-size='50' font-weight='bold' fill='white' font-family='sans-serif'>FX</text></svg>">
+  <title>Mis pedidos | FoodExpress</title>
+  <meta name="description" content="Consulta la confirmación y el estado en tiempo real de tus pedidos en FoodExpress.">
+  <meta name="theme-color" content="#171310">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='26' fill='%23ff5a1f'/><text y='70' x='50' text-anchor='middle' font-size='60'>⚡</text></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind.config.js"></script>
   <link rel="stylesheet" href="css/styles.css">
-
-  <script type="module" src="js/pages/confirmacion.js"></script>
 </head>
-<body class="min-h-screen bg-[#f8f9fa] font-sans text-gray-800">
+<body class="bg-cream font-sans text-ink-800">
 
-  <header class="sticky top-0 z-50 border-b border-gray-100 bg-white">
-    <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <a href="index.html" class="flex items-center gap-2.5">
-        <span class="grid h-8 w-8 place-items-center rounded-lg bg-[#ff5722] text-xs font-black text-white shadow-sm">
-          FX
-        </span>
-        <span class="font-display text-lg font-extrabold tracking-tight text-gray-900">
-          Food<span class="text-[#ff5722]">Express</span>
-        </span>
-      </a>
+  <header id="app-navbar"></header>
 
-      <div class="flex items-center gap-4">
-        <a href="index.html" class="text-sm font-semibold text-gray-600 hover:text-[#ff5722] transition">
-          Volver al menú
-        </a>
-      </div>
+  <main class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <nav aria-label="Ruta de navegación" class="mb-4">
+      <ol class="breadcrumb mb-0 text-sm">
+        <li class="breadcrumb-item"><a href="index.html">Menú</a></li>
+        <li class="breadcrumb-item"><a href="confirmacion.html" id="crumb-pedidos">Mis pedidos</a></li>
+        <li class="breadcrumb-item active" aria-current="page" id="crumb-orden" hidden></li>
+      </ol>
     </nav>
-  </header>
 
-  <main class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <div id="success-icon" class="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-full bg-emerald-100 text-2xl text-emerald-600 shadow-sm">
-        ✓
-      </div>
-      <h1 id="page-title" class="font-display text-2xl font-extrabold text-gray-900 sm:text-3xl">
-        ¡Pedido confirmado!
-      </h1>
-      <p id="page-subtitle" class="mt-1 text-sm text-gray-500"></p>
-    </div>
+    <!-- Cabecera de éxito (solo para un pedido recién creado) -->
+    <section id="success-hero" hidden class="mb-8 text-center">
+      <div class="mx-auto mb-4 grid h-20 w-20 place-items-center rounded-3xl bg-emerald-100 text-4xl text-emerald-600 animate-pop"><i class="bi bi-check-lg"></i></div>
+      <h1 class="font-display text-4xl font-extrabold tracking-tight text-ink-900 mb-1">¡Pedido confirmado!</h1>
+      <p class="text-ink-400 mb-0">Gracias por tu compra. Ya estamos trabajando en tu pedido.</p>
+    </section>
 
-    <div id="order-loading" class="mt-8 rounded-2xl border border-gray-100 bg-white p-12 text-center shadow-sm">
-      <div class="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#ff5722]"></div>
-      <p class="text-sm text-gray-500">Cargando información del pedido...</p>
-    </div>
+    <!-- Cargando -->
+    <section id="state-loading" class="rounded-3xl bg-white p-14 text-center shadow-card ring-1 ring-black/5">
+      <div class="spinner-border text-brand-500" role="status" aria-hidden="true"></div>
+      <p class="mt-3 mb-0 text-sm text-ink-400">Cargando información…</p>
+    </section>
 
-    <div id="order-lookup" hidden class="mt-8 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-      <form id="lookup-form" class="flex flex-col gap-3 sm:flex-row">
-        <input id="lookup-id" type="text" placeholder="Ej. ORD-000001 o 1" class="input flex-1">
-        <button type="submit" class="rounded-xl bg-[#ff5722] hover:bg-[#f4511e] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition">
-          Consultar
-        </button>
-      </form>
-      <p id="error-lookup-id" class="field-error"></p>
-    </div>
+    <!-- Error -->
+    <section id="state-error" hidden class="rounded-3xl bg-rose-50 p-10 text-center ring-1 ring-rose-100">
+      <div class="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-2xl bg-white text-3xl">⚠️</div>
+      <p class="font-display text-lg font-bold text-ink-900 mb-1">No pudimos cargar la información</p>
+      <p id="state-error-msg" class="text-sm text-ink-500"></p>
+      <a href="confirmacion.html" class="btn btn-dark px-4"><i class="bi bi-receipt me-1"></i>Ver mis pedidos</a>
+    </section>
 
-    <div id="order-error" hidden class="mt-8 rounded-2xl border border-rose-100 bg-rose-50 p-6 text-center">
-      <p id="order-error-msg" class="text-sm text-rose-600 font-medium"></p>
-    </div>
-
-    <div id="order-content" hidden class="mt-8 space-y-6">
-      <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4">
-          <div>
-            <span class="text-xs text-gray-400">Número de orden</span>
-            <div class="flex items-center gap-2">
-              <span id="order-number" class="font-display text-xl font-black text-gray-900"></span>
-              <button type="button" id="btn-copy-order" class="text-xs text-[#ff5722] hover:underline">
-                Copiar
-              </button>
+    <!-- ============ Vista: detalle de un pedido ============ -->
+    <div id="order-view" hidden class="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div class="space-y-6">
+        <section class="rounded-3xl bg-white p-6 shadow-card ring-1 ring-black/5 sm:p-8" aria-labelledby="order-number">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-ink-400">Número de orden</p>
+              <div class="flex items-center gap-2">
+                <h2 id="order-number" class="font-display text-2xl font-black text-ink-900 mb-0"></h2>
+                <button type="button" id="btn-copy" class="grid h-8 w-8 place-items-center rounded-lg bg-transparent text-ink-400 hover:bg-black/5 hover:text-ink-800" aria-label="Copiar número de orden"><i class="bi bi-copy"></i></button>
+              </div>
+              <p id="order-date" class="mb-0 text-sm text-ink-400"></p>
             </div>
-            <p id="order-date" class="text-xs text-gray-400 mt-0.5"></p>
+            <span id="order-badge"></span>
           </div>
-          <span id="order-status-badge"></span>
-        </div>
 
-        <div class="mt-6">
-          <div class="relative mb-6">
-            <div class="absolute left-0 top-5 h-1 w-full bg-gray-100 -translate-y-1/2"></div>
-            <div id="tracker-progress" class="absolute left-0 top-5 h-1 bg-[#ff5722] -translate-y-1/2 transition-all duration-500" style="width: 0%"></div>
-            <ol id="order-tracker" class="relative flex justify-between"></ol>
+          <!-- Línea de tiempo -->
+          <ol id="order-timeline" class="mt-8 grid list-none grid-cols-4 gap-2 ps-0"></ol>
+
+          <div id="order-cancelled" hidden class="mt-8 flex items-center gap-3 rounded-2xl bg-rose-50 p-4 text-rose-700 ring-1 ring-rose-100">
+            <i class="bi bi-x-octagon-fill text-xl"></i>
+            <p class="mb-0 text-sm font-semibold">Este pedido fue cancelado.</p>
           </div>
-        </div>
 
-        <div class="mt-6 rounded-xl bg-orange-50/70 border border-orange-100 p-4 text-center">
-          <p class="text-xs font-semibold text-gray-500">Tiempo de entrega</p>
-          <p id="eta-range" class="mt-1 font-display text-lg"></p>
-        </div>
+          <div id="order-eta" hidden class="mt-6 flex items-center gap-4 rounded-2xl bg-brand-50 p-4 ring-1 ring-brand-100">
+            <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-gradient text-xl text-white shadow-glow"><i class="bi bi-clock-history"></i></span>
+            <div>
+              <p class="mb-0 text-xs font-semibold uppercase tracking-wider text-brand-700">Entrega estimada</p>
+              <p id="order-eta-text" class="mb-0 font-display text-xl font-bold text-ink-900"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="rounded-3xl bg-white shadow-card ring-1 ring-black/5" aria-labelledby="items-title">
+          <h2 id="items-title" class="border-b border-black/5 px-6 py-4 font-display text-lg font-bold text-ink-900 mb-0">Platillos</h2>
+          <ul id="order-items" class="list-none ps-0 mb-0 divide-y divide-black/5"></ul>
+        </section>
       </div>
 
-      <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-        <h3 class="font-display text-base font-bold text-gray-900 mb-3">📍 Datos de Entrega</h3>
-        <div class="grid gap-2 text-xs text-gray-600 sm:grid-cols-2">
-          <div>
-            <span class="font-semibold text-gray-700">Nombre:</span>
-            <span id="delivery-nombre" class="ml-1 text-gray-900"></span>
+      <aside class="space-y-6 lg:sticky lg:top-24 h-fit">
+        <section class="overflow-hidden rounded-3xl bg-white shadow-lift ring-1 ring-black/5" aria-labelledby="summary-title">
+          <div class="bg-ink-900 px-6 py-5 text-white">
+            <h2 id="summary-title" class="font-display text-lg font-bold mb-0">Resumen</h2>
+            <p id="order-pago" class="mb-0 text-xs text-ink-200"></p>
           </div>
-          <div>
-            <span class="font-semibold text-gray-700">Teléfono:</span>
-            <span id="delivery-telefono" class="ml-1 text-gray-900"></span>
-          </div>
-          <div class="sm:col-span-2">
-            <span class="font-semibold text-gray-700">Dirección:</span>
-            <span id="delivery-direccion" class="ml-1 text-gray-900"></span>
-          </div>
+          <dl class="space-y-3 p-6 text-sm mb-0">
+            <div class="flex justify-between"><dt class="font-normal text-ink-500">Subtotal</dt><dd id="sum-subtotal" class="mb-0 font-semibold text-ink-900"></dd></div>
+            <div class="flex justify-between"><dt class="font-normal text-ink-500">Envío</dt><dd id="sum-envio" class="mb-0 font-semibold text-ink-900"></dd></div>
+            <div class="flex justify-between"><dt class="font-normal text-ink-500">Impuestos</dt><dd id="sum-impuestos" class="mb-0 font-semibold text-ink-900"></dd></div>
+            <div class="flex items-end justify-between border-t border-dashed border-ink-100 pt-4">
+              <dt class="font-display text-base font-bold text-ink-900">Total</dt>
+              <dd id="sum-total" class="mb-0 font-display text-3xl font-extrabold text-ink-900"></dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="rounded-3xl bg-white p-6 shadow-card ring-1 ring-black/5" aria-labelledby="delivery-title">
+          <h2 id="delivery-title" class="font-display text-base font-bold text-ink-900 mb-3"><i class="bi bi-geo-alt me-1 text-brand-500"></i>Entrega</h2>
+          <p id="delivery-nombre" class="mb-0 font-semibold text-ink-900"></p>
+          <p id="delivery-telefono" class="mb-1 text-sm text-ink-500"></p>
+          <p id="delivery-direccion" class="mb-0 text-sm text-ink-500"></p>
+          <p id="delivery-referencias" class="mb-0 mt-1 text-xs text-ink-400"></p>
+          <p id="order-notas" hidden class="mt-4 mb-0 rounded-xl bg-amber-50 p-3 text-sm text-amber-900"></p>
+        </section>
+
+        <div class="flex flex-col gap-2">
+          <button type="button" id="btn-cancel-order" hidden class="btn btn-outline-danger w-full py-2.5"><i class="bi bi-x-circle me-1"></i>Cancelar pedido</button>
+          <a href="index.html#menu" class="btn btn-brand w-full py-2.5"><i class="bi bi-plus-circle me-1"></i>Pedir algo más</a>
+          <p class="mt-1 mb-0 flex items-center justify-center gap-2 text-xs text-ink-400">
+            <span id="last-updated"></span>
+            <button type="button" id="btn-refresh" class="bg-transparent font-semibold text-brand-600 hover:underline">Actualizar <i class="bi bi-arrow-clockwise"></i></button>
+          </p>
         </div>
-      </div>
-
-      <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-        <h3 class="font-display text-base font-bold text-gray-900 mb-3">Resumen de Productos</h3>
-        <ul id="order-items"></ul>
-
-        <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4 font-bold text-gray-900">
-          <span>Total</span>
-          <span id="order-total" class="font-display text-2xl text-[#ff5722]"></span>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between text-xs text-gray-400">
-        <span id="last-updated"></span>
-        <button type="button" id="btn-refresh-order" class="font-semibold text-[#ff5722] hover:underline">
-          Actualizar estado ↻
-        </button>
-      </div>
+      </aside>
     </div>
+
+    <!-- ============ Vista: historial ============ -->
+    <section id="list-view" hidden aria-labelledby="list-title">
+      <div class="mb-8">
+        <h1 id="list-title" class="font-display text-4xl font-extrabold tracking-tight text-ink-900 mb-1">Mis pedidos</h1>
+        <p class="text-ink-400 mb-0">Consulta el estado y el detalle de tus pedidos recientes.</p>
+      </div>
+      <div id="orders-list" class="grid gap-4"></div>
+      <div id="orders-empty" hidden class="mx-auto max-w-lg rounded-[2rem] bg-white p-12 text-center shadow-card ring-1 ring-black/5">
+        <div class="mx-auto mb-5 grid h-24 w-24 place-items-center rounded-3xl bg-brand-50 text-5xl animate-float">🧾</div>
+        <h2 class="font-display text-2xl font-bold text-ink-900">Aún no tienes pedidos</h2>
+        <p class="text-ink-400">Cuando hagas tu primer pedido podrás seguirlo desde aquí.</p>
+        <a href="index.html#menu" class="btn btn-brand mt-2 px-5 py-3"><i class="bi bi-arrow-left me-2"></i>Explorar el menú</a>
+      </div>
+    </section>
   </main>
 
-  <footer class="mt-12 border-t border-gray-200 bg-white">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 text-xs text-gray-500 sm:px-6 lg:px-8">
-      <p>© <span data-year></span> FoodExpress · Proyecto Programación II</p>
-    </div>
-  </footer>
+  <footer id="app-footer"></footer>
+
+  <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="top:72px" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/pages/confirmacion.js"></script>
 </body>
 </html>

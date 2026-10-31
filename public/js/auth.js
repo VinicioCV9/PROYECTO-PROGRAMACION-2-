@@ -78,6 +78,9 @@ export function requireAuth({ role } = {}) {
   return user;
 }
 
+/** Atajo para páginas exclusivas de administración. */
+export const requireAdmin = () => requireAuth({ role: 'admin' });
+
 /** Confirma con el servidor que el token sigue siendo válido y refresca los datos del usuario. */
 export async function verifySession({ role } = {}) {
   const { data } = await api.auth.me();

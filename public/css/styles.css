@@ -26,7 +26,8 @@
 
 /* Reset mínimo de bordes (lo que haría el preflight de Tailwind, sin romper Bootstrap) */
 *, ::before, ::after { border-width: 0; border-style: solid; border-color: #ece7e2; }
-[hidden] { display: none !important; }
+/* Doble selector: más específico que .flex/.grid de Tailwind (que también son !important) */
+[hidden][hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 img { max-width: 100%; }
